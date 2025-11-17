@@ -1,6 +1,10 @@
+/**
+ * This file uses the Valdi compiler to generate code, but due to depenency cycle must be copied to another module
+ * (eg valdi_example), and remove the "@__" annotation prefixes, then copy the generated code back over.
+ */
 
 /**
- * @ExportModel({ios: 'SCValdiDrawingFontSpecs', android: 'com.snap.valdi.modules.drawing.FontSpecs'})
+ * @__ExportProxy({ios: 'SCValdiDrawingFontSpecs', android: 'com.snap.valdi.modules.drawing.FontSpecs'})
  */
 export interface FontSpecs {
   font: string;
@@ -8,7 +12,7 @@ export interface FontSpecs {
 }
 
 /**
- * @ExportModel({ios: 'SCValdiDrawingSize', android: 'com.snap.valdi.modules.drawing.Size'})
+ * @__ExportProxy
  */
 export interface Size {
   width: number;
@@ -16,7 +20,7 @@ export interface Size {
 }
 
 /**
- * @ExportEnum({ios: 'SCValdiDrawingFontWeight', android: 'com.snap.valdi.modules.drawing.FontWeight'})
+ * @__ExportEnum({ios: 'SCValdiDrawingFontWeight', android: 'com.snap.valdi.modules.drawing.FontWeight'})
  */
 export const enum FontWeight {
   LIGHT = 'light',
@@ -28,7 +32,7 @@ export const enum FontWeight {
 }
 
 /**
- * @ExportEnum({ios: 'SCValdiDrawingFontStyle', android: 'com.snap.valdi.modules.drawing.FontStyle'})
+ * @__ExportEnum({ios: 'SCValdiDrawingFontStyle', android: 'com.snap.valdi.modules.drawing.FontStyle'})
  */
 export const enum FontStyle {
   NORMAL = 'normal',
@@ -36,14 +40,14 @@ export const enum FontStyle {
 }
 
 /**
- * @ExportProxy({ios: 'SCValdiDrawingFont', android: 'com.snap.valdi.modules.drawing.Font'})
+ * @__ExportProxy({ios: 'SCValdiDrawingFont', android: 'com.snap.valdi.modules.drawing.Font'})
  */
 export interface Font {
   measureText(text: string, maxWidth?: number, maxHeight?: number, maxLines?: number): Size;
 }
 
 /**
- * @ExportProxy({android: 'com.snap.valdi.modules.drawing.DrawingModule', ios: 'SCValdiDrawingModule'})
+ * @__ExportProxy({android: 'com.snap.valdi.modules.drawing.DrawingModule', ios: 'SCValdiDrawingModule'})
  */
 export interface DrawingModule {
   getFont(specs: FontSpecs): Font;
