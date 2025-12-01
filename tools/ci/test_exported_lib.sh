@@ -42,20 +42,57 @@ echo "AAR size: $(du -h "$AAR_PATH" | cut -f1)"
 echo ""
 echo "Verifying AAR contents..."
 
-EXPECTED_FILES=(
-    "assets/valdi_core.valdimodule"
-    "assets/hello_world.valdimodule"
+# Expected modules (should have both .valdimodule and .map.json)
+EXPECTED_MODULES=(
+    "coreutils"
+    "hello_world"
+    "jasmine"
+    "source_map"
+    "valdi_core"
+    "valdi_tsx"
+)
+
+# Expected JNI library
+EXPECTED_LIBS=(
     "jni/arm64-v8a/libhello_world_export.so"
 )
 
 MISSING_FILES=()
 
-for file in "${EXPECTED_FILES[@]}"; do
+# Check for valdimodule files
+echo "Checking .valdimodule files..."
+for module in "${EXPECTED_MODULES[@]}"; do
+    file="assets/${module}.valdimodule"
     if unzip -l "$AAR_PATH" | grep -q "$file"; then
         echo "[OK] Found: $file"
     else
         echo "[MISSING] $file"
         MISSING_FILES+=("$file")
+    fi
+done
+
+# Check for sourcemap files
+echo ""
+echo "Checking .map.json files (sourcemaps)..."
+for module in "${EXPECTED_MODULES[@]}"; do
+    file="assets/${module}.map.json"
+    if unzip -l "$AAR_PATH" | grep -q "$file"; then
+        echo "[OK] Found: $file"
+    else
+        echo "[MISSING] $file"
+        MISSING_FILES+=("$file")
+    fi
+done
+
+# Check for native libraries
+echo ""
+echo "Checking JNI libraries..."
+for lib in "${EXPECTED_LIBS[@]}"; do
+    if unzip -l "$AAR_PATH" | grep -q "$lib"; then
+        echo "[OK] Found: $lib"
+    else
+        echo "[MISSING] $lib"
+        MISSING_FILES+=("$lib")
     fi
 done
 
@@ -87,7 +124,8 @@ echo "================================================================"
 echo "[PASSED] All required files present in AAR"
 echo "================================================================"
 echo "The valdi_exported_library correctly packages:"
-echo "  - .valdimodule files (valdi_core, helloworld)"
+echo "  - ${#EXPECTED_MODULES[@]} .valdimodule files (${EXPECTED_MODULES[*]})"
+echo "  - ${#EXPECTED_MODULES[@]} .map.json sourcemap files"
 echo "  - Native library (libhello_world_export.so)"
 
 popd
