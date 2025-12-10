@@ -50,7 +50,7 @@ public:
         return *this;
     }
 
-    T get() const {
+    const T& get() const {
         return _ref;
     }
 
